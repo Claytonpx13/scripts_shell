@@ -138,6 +138,8 @@ DNS(){
 }
 
 TORRENT(){
+	# Libera uma porta personalizada para uso de aplicativo(s) torrent(s)
+	# Uso nao recomendavel para servidores, libere apenas para usuarios finais
 	$apt -A OUTPUT -p tcp  -s $all --sport $portas_altas --dport $torrent -j ACCEPT
 }
 
