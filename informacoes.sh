@@ -36,7 +36,7 @@ REDE(){
 	# Este trecho foi inspirado no código da comunidade Viva o Linux
 	## Referencia:
 	# http://www.vivaolinux.com.br/script/Script-simples-para-pegar-informacoes-sobre-placa-de-rede
-	#Nix - Novembro/2013
+	#Publicado por Fernando R. Durso
 
 	echo
 	echo -e '\033[32;1m ==== Informacoes rede ==== \033[m'
