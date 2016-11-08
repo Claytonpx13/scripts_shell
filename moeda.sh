@@ -111,7 +111,8 @@ do
  	--bitcoin | -b)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/bitcoin | grep '฿' | tr -d '_'
- 		echo -e "Bitcoin \033[m";;
+ 		echo -e "Bitcoin \033[m"
+	;;
 
  	--contato | -c)
 		echo
@@ -119,71 +120,86 @@ do
 		echo
 		echo "Contato: "
 		echo -e "         Telegram : \033[32m http://telegram.me/Claytonpx13 \033[m"
-		echo -e "         Email    : \033[32m claytonp_13@hotmail.com \033[m";;
+		echo -e "         Email    : \033[32m claytonp_13@hotmail.com \033[m"
+	;;
 
  	--dolar | -d)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com | grep 'US$ 1,00' | tr -d '_'
- 		echo -e "Dólar - Americano \033[m";;
+ 		echo -e "Dólar - Americano \033[m"
+	;;
 
  	--dolar-australiano | -da)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/australiano/ | grep 'A$ 1' | tr -d '_'
- 		echo -e "Dólar - Australiano \033[m";;
+ 		echo -e "Dólar - Australiano \033[m"
+	;;
 
  	--dolar-canadense | -dc)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/canadense/ | grep 'C$ 1' | tr -d '_'
- 		echo -e "Dólar - Canadense \033[m";;
+ 		echo -e "Dólar - Canadense \033[m"
+	;;
 
  	--euro | -e)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/euro | grep '€ 1' | tr -d '_'
- 		echo -e "Euro \033[m";;
+ 		echo -e "Euro \033[m"
+	;;
 
  	--help | -h)
- 		ajuda;;
+ 		ajuda
+	;;
 
  	--iene | -i)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/iene | grep '¥' | tr -d '_'
- 		echo -e "Iene \033[m";;
+ 		echo -e "Iene \033[m"
+	;;
 
  	--libra | -l)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/libra | grep '£' | tr -d '_'
- 		echo -e "Libra \033[m";;
+ 		echo -e "Libra \033[m"
+	;;
 
  	--litecoin | -L)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/litecoin | grep 'Ł 1' | tr -d '_'
- 		echo -e "Litecoin \033[m";;
+ 		echo -e "Litecoin \033[m"
+	;;
 
  	--ouro | -o)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/ouro | grep 'g 1' | tr -d '_'
- 		echo -e "Ouro \033[m";;
+ 		echo -e "Ouro \033[m"
+	;;
 
  	--peso | --pa | -p)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/peso-argentino/ | grep '$ 1' | tr -d '_'
- 		echo -e "Peso - Argentino \033[m";;
+ 		echo -e "Peso - Argentino \033[m"
+	;;
 
  	--peso-chileno | -pc)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/peso-chileno/ | grep 'R$ 1' | tr -d '_'
- 		echo -e "Peso - Chileno \033[m";;
+ 		echo -e "Peso - Chileno \033[m"
+	;;
 
  	--peso-uruguaio | -pu)
  		echo -e "\033[32m"
  		lynx -dump -nolist http://dolarhoje.com/peso-uruguaio/ | grep '$ 1' | tr -d '_'
- 		echo -e "Peso - Uruguaio \033[m";;
+ 		echo -e "Peso - Uruguaio \033[m"
+	;;
 
  	--version | --versao | --versão | -v)
- 		versao;;
+ 		versao
+	;;
 
  	*)
- 		ERRO;;
+ 		ERRO
+	;;
  esac
 
  # Opção $1 já processada a fila deve andar.
