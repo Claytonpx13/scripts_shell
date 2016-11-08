@@ -206,21 +206,21 @@ case $1 in
 
 		## Abaixo estao todas as funcoes do firewall
 		## descomente as linhas das funcoes que queira ativar
-    STATEFULL        # Recomendado manter ativo esta funcao!
-    #Loopback
-    #SYN_FLOOD
-    #PACOTES_INVALIDOS
-    #BLOQUEIO_PORTAS_TROJAN
-    #ICMP
-    PING
-    #SSH
-    HTTP_HTTPS
-    #FTP
-    DNS
-    #TORRENT
-    ROTEAMENTO
-    #PROXY
-    #REJEITAR
+    		STATEFULL        # Recomendado manter ativo esta funcao!
+    		#Loopback
+    		#SYN_FLOOD
+   		#PACOTES_INVALIDOS
+    		#BLOQUEIO_PORTAS_TROJAN
+   		#ICMP
+   		PING
+    		#SSH
+   		HTTP_HTTPS
+    		#FTP
+   		DNS
+    		#TORRENT
+   		ROTEAMENTO
+    		#PROXY
+   		#REJEITAR
 	;;
 
 	stop) ### Finaliza todas as regras existentes
