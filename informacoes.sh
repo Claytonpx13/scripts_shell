@@ -1,12 +1,10 @@
 #!/bin/bash 
 #### Script para coletar informacoes da maquina
 
-## Referencia:
-# http://www.vivaolinux.com.br/script/Script-simples-para-pegar-informacoes-sobre-placa-de-rede
-#Nix - Novembro/2013
-
-# Atualizado por: Clayton Pereira | Email claytonp_13@hotmail.com | Telegram @Claytonpx13 or https://telegram.me/Claytonpx13
-# Data da atualização 28/10/2016
+# Autor: Clayton Pereira 
+# Contato:    Email      claytonp_13@hotmail.com 
+#             Telegram   @Claytonpx13 ou https://telegram.me/Claytonpx13
+# Data da criacao 28/10/2016
 
 HARDWARE(){
 	# Coleta info de memoria
@@ -35,6 +33,11 @@ EOT
 }
 
 REDE(){
+	# Este trecho foi inspirado no código da comunidade Viva o Linux
+	## Referencia:
+	# http://www.vivaolinux.com.br/script/Script-simples-para-pegar-informacoes-sobre-placa-de-rede
+	#Nix - Novembro/2013
+
 	echo
 	echo -e '\033[32;1m ==== Informacoes rede ==== \033[m'
 
