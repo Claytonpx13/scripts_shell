@@ -26,6 +26,7 @@ HARDWARE(){
 	
 cat << EOT
 Memoria ............: ${MEM}
+Memoria Swap .......: $(cat /proc/meminfo | grep SwapTotal | awk '{print $2}' | sed 's/.*/& KB/')
 Processador ........: [ ${NPROC} ] ${PROC}
 Disco(s) ...........: $DISK
 EOT
@@ -132,8 +133,15 @@ AJUDA(){
 	echo "    Mostra esta tela de ajuda."
 	echo
 	echo -e "  \033[37;1m-k\033[m ou \033[37;1m--kernel\033[m"
+	echo "    Informacoes do kernel"
+	echo "      name, realease e version."
 	echo
 	echo -e "  \033[37;1m-r\033[m ou \033[37;1m--rede\033[m"
+	echo "     Informacoes de rede"
+	echo "       Endereco de rede"
+	echo "       IP address e mascara de rede"
+	echo "       Gateway padrao e dns"
+	echo "       Broadcast e endereco fisico (MAC ADDRESS)"
 	echo
 	echo -e "  \033[37;1m-S\033[m ou \033[37;1m--services\033[m"
 	echo
