@@ -1,6 +1,6 @@
 #!/bin/bash
 # Antivirus - ClamAV
-# Versao do script: 1.0
+# Versao do script: 1.1
 
 function update(){
 	service clamav-freshclam stop
@@ -33,7 +33,7 @@ case $1 in
 --help | -h)
 	echo
 	echo " Syntax de uso:"
-	echo "$(basename $0) [ Diretorio alvo ]"
+	echo "$(basename "$0") [ Diretorio alvo ]"
 	echo
 	echo "   --log                -l              Exibe o log do Clamav"
 	echo "   --log-update         -L              Historico de atualizacao da base de dados"
@@ -55,37 +55,36 @@ case $1 in
 ;;
 
 --update | -u)
-	if [ $(id -u) != "0" ];then
+	[[ $(id -u) != "0" ]] && {
 		echo -e "É preciso permissao de administrador para instalar o ClamAV"
 		echo -e "Pressione <ENTER> para finalizar o script"
-		read
+		read -r
 		exit 1
-	fi
+	}
 
 	update
 ;;
 
 --remove | -r)
-	which clamscan > /dev/null
-	if [ "$?" == "0" ];then
-		clamscan --bell -r --remove $2
+	if command -v clamscan &> /dev/null;then
+		clamscan --bell -r --remove "$2"
 		exit 0
 	else
 		echo "Antivirus não encontrado em seu computador."
 		echo "Quer instalar o clamav em sua maquina? (S/N)"
-		read instalar
-		if [ $(echo "$instalar" | tr a-z A-Z) == "S" ];then
-			if [ $(id -u) != "0" ];then
+		read -r instalar
+		if [[ $(echo "$instalar" | tr '[:lower:]' '[:upper:]') == "S" ]];then
+			[[ $(id -u) != "0" ]] && {
 				echo -e "É preciso permissao de administrador para instalar o ClamAV"
 				echo -e "Pressione <ENTER> para finalizar o script"
-				read
+				read -r
 				exit 1
-			fi
+			}
 			apt install -y clamav clamav-daemon libclamav7
 			sleep 1
 			echo "Instalacao concluida."
 			exit 0
-		elif [ $(echo "$instalar" | tr a-z A-Z) == "N" ];then
+		elif [[ $(echo "$instalar" | tr '[:lower:]' '[:upper:]') == "N" ]];then
 			echo "Instalacao abortada!"
 			exit 0
 		else
@@ -96,26 +95,25 @@ case $1 in
 ;;
 
 *)
-	which clamscan > /dev/null
-	if [ "$?" == "0" ];then
-		clamscan --bell -r $1
+	if command -v clamscan &> /dev/null;then
+		clamscan --bell -r "$1"
 		exit 0
 	else
 		echo "Antivirus não encontrado em seu computador."
 		echo "Quer instalar o clamav em sua maquina? (S/N)"
-		read instalar
-		if [ $(echo "$instalar" | tr a-z A-Z) == "S" ];then
-			if [ $(id -u) != "0" ];then
+		read -r instalar
+		if [[ $(echo "$instalar" | tr '[:lower:]' '[:upper:]') == "S" ]];then
+			[[ $(id -u) != "0" ]] && {
 				echo -e "É preciso permissao de administrador para instalar o ClamAV"
 				echo -e "Pressione <ENTER> para finalizar o script"
-				read
+				read -r
 				exit 1
-			fi
+			}
 			apt install -y clamav clamav-daemon libclamav7
 			sleep 1
 			echo "Instalacao concluida."
 			exit 0
-		elif [ $(echo "$instalar" | tr a-z A-Z) == "N" ];then
+		elif [[ $(echo "$instalar" | tr '[:lower:]' '[:upper:]') == "N" ]];then
 			echo "Instalacao abortada!"
 			exit 0
 		else
