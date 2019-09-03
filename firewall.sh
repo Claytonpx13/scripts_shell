@@ -21,35 +21,12 @@
 #versao 0.3
 
 ### Campo de variaveis ####################
-### VARIAVEIS - Comandos
-ipt=$(which iptables)             # Recebe o caminho do executavel iptables
-squid=$(which squid3)             # Recebe o caminho do executavel squid3
-modprobe=$(which modprobe)        # Recebe o caminho do executabel modprobe
-route=$(which route)              # Recebe o caminho do executavel route
-
-### VARIAVEIS - Interfaces network's
-eth0="enp0s3"                     # Interface de rede externa (conexao com a internet)
-eth1="enp0s8"                     # Interface de rede interna
-#eth2=""
-
-### VARIAVEIS IP's
-all="0.0.0.0/0.0.0.0"             # Todos os IP's
+ipt=$(command -v iptables)      # Recebe o caminho do executavel iptables
+eth0="enp0s3"                   # Interface de rede externa (conexao com a internet)
+eth1="enp0s8"                   # Interface de rede interna
 rede="192.168.1.0/24"           # IP's da rede interna
-gateway="192.168.1.1"           # IP da maquina gateway (firewall da rede)
-lo="127.0.0.1"                    # IP da interface Loopback (placa logica)
-#impress01="xxx.xxx.xxx.xxx"       # IP da impressora 01
-#impress02="xxx.xxx.xxx.xxx"       # IP da impressora 02
-
-### VARIAVEIS arquivos
-#squid.conf="/etc/squid/squid.conf" # Refina o caminho de acordo com sua versao de programa
-#firewall.log="/var/log/firewall.log"
-
-### VARIAVEIS Portas
-portas_altas="1024:65535"        # Portas Cliente
-# PORTAS sujeitas ao ataque de trojan
+portas_altas="1024:65535"       # Portas Cliente
 portas_trojans="1234 1524 2583 3024 4092 5742 5556 5557 6000 6001 6002 6711 8787 12345 12346 16660 27444 27665 31335 31336 31337 31338 33270 60001"
-proxy="5128"                     # Porta proxy padrao 3128
-#torrent="xxxx"                   # Porta para aplicativo torrent (opcional)
 ### Fim do Campo de variaveis #############
 
 
@@ -86,10 +63,10 @@ BLOQUEIO_PORTAS_TROJAN(){
 
 	# Verificando cada porta suspeita
 	for PORTA in ${portas_trojans};do
-		$ipt -A PortasTrojan -p tcp --sport $portas_altas --dport ${PORTA} -j LOG --log-prefix "FIREWALL:Trojan tcp p:${PORTA}"
-		$ipt -A PortasTrojan -p tcp --sport $portas_altas --dport ${PORTA} -j REJECT
-		$ipt -A PortasTrojan -p udp --sport $portas_altas --dport ${PORTA} -j LOG --log-prefix "FIREWALL:Trojan udp p:${PORTA}"
-		$ipt -A PortasTrojan -p udp --sport $portas_altas --dport ${PORTA} -j REJECT
+		$ipt -A PortasTrojan -p tcp --sport $portas_altas --dport "${PORTA}" -j LOG --log-prefix "FIREWALL:Trojan tcp p:${PORTA}"
+		$ipt -A PortasTrojan -p tcp --sport $portas_altas --dport "${PORTA}" -j REJECT
+		$ipt -A PortasTrojan -p udp --sport $portas_altas --dport "${PORTA}" -j LOG --log-prefix "FIREWALL:Trojan udp p:${PORTA}"
+		$ipt -A PortasTrojan -p udp --sport $portas_altas --dport "${PORTA}" -j REJECT
 	done
 
 	# Redireciona para outra CHAIN as portas_trojans
@@ -105,8 +82,8 @@ ICMP(){
 
 
 PING(){
-	$ipt -A OUTPUT -m limit --limit 6/minute --limit-burst 4 -p icmp --icmp-type echo-request -s $all -j ACCEPT
-	$ipt -A INPUT -p icmp --icmp-type echo-request -s $rede -d $gateway-j ACCEPT
+	$ipt -A OUTPUT -m limit --limit 6/minute --limit-burst 4 -p icmp --icmp-type echo-request -j ACCEPT
+	$ipt -A INPUT -p icmp --icmp-type echo-request -s $rede -j ACCEPT
 }
 
 SSH(){ 
@@ -115,16 +92,16 @@ SSH(){
 	## para somente ela!
 
 	## Regras ssh - Cliente
-	$ipt -A OUTPUT -p tcp -s $rede --sport $portas_altas -d $gateway --dport 22 -j ACCEPT
+	$ipt -A OUTPUT -p tcp -s $rede --sport $portas_altas --dport 22 -j ACCEPT
 
 	## Regras ssh - Servidor
 	#$ipt -A INPUT -m state --state NEW -p tcp -s $gateway --sport 22 -d $rede --dport $portas_altas -j ACCEPT
 }
 
-HTTP_HTTPS(){
+WEB(){
 	# Os servicos HTTP e HTTPS permitem a conexao com a internet
-	$ipt -A OUTPUT -p tcp -s $all --sport $portas_altas -d $gateway --dport 80 -j ACCEPT
-	$ipt -A OUTPUT -p tcp -s $all --sport $portas_altas -d $gateway --dport 443 -j ACCEPT
+	$ipt -A OUTPUT -p tcp --sport $portas_altas --dport 80 -j ACCEPT
+	$ipt -A OUTPUT -p tcp --sport $portas_altas --dport 443 -j ACCEPT
 }
 
 FTP(){
@@ -134,29 +111,17 @@ FTP(){
 
 DNS(){
 	# O servico DNS permite a traducao de nomes
-	$ipt -A OUTPUT -p udp -s $all --sport $portas_altas --dport 53 -j ACCEPT
-}
-
-TORRENT(){
-	# Libera uma porta personalizada para uso de aplicativo(s) torrent(s)
-	# Uso nao recomendavel para servidores, libere apenas para usuarios finais
-	$apt -A OUTPUT -p tcp  -s $all --sport $portas_altas --dport $torrent -j ACCEPT
+	$ipt -A OUTPUT -p udp --sport $portas_altas --dport 53 -j ACCEPT
 }
 
 ROTEAMENTO(){
 	ip_forward=$(cat /proc/sys/net/ipv4/ip_forward)
-	if [ $ip_forward -eq 0 ];then
+	if [[ $ip_forward -eq 0 ]];then
 		echo "1" > /proc/sys/net/ipv4/ip_forward
 	fi
 
 	$ipt -t nat -A POSTROUTING -o $eth1 -j MASQUERADE # Compartilhando Internet com eth1
 	#$ipt -t nat -A POSTROUTING -o $eth2 -j MASQUERADE # Compartilhando Internet com eth2
-}
-
-PROXY(){
-	# Redireciona porta 80 para a porta do Proxy (Squid3)
-	$ipt -t nat -A PREROUTING -p tcp -i eth1 --dport 80 -j REDIRECT --to $proxy
-	#$ipt -t nat -A PREROUTING -p tcp -i eth2 --dport 80 -j REDIRECT --to $proxy
 }
 
 REJEITAR(){
@@ -176,22 +141,10 @@ REJEITAR(){
 }
 ### Fim do Campo de Funcoes ###############
 
-### Funcoes de LOG ########################
-log_enable(){
-	# Ainda em construção!
-	echo "Ainda em construção!"
-}
-
-log_disable(){
-	# Ainda em construção!
-	echo "Ainda em construção!"
-}
-### Fim do Campo Funcoes de LOG ###########
-
-if [ $(id -u) != "0" ];then
+if [[ $(id -u) != "0" ]];then
 	echo -e "O usuário atual não é o ROOT, execute o comando [sudo -i]<ENTER> depois digite sua senha"
 	echo -e "Pressione <ENTER> para finalizar o script"
-	read
+	read -r
 	exit 1
 fi
 
@@ -214,12 +167,10 @@ case $1 in
    		#ICMP
    		PING
     		#SSH
-   		HTTP_HTTPS
+   		WEB
     		#FTP
    		DNS
-    		#TORRENT
    		ROTEAMENTO
-    		#PROXY
    		#REJEITAR
 	;;
 
@@ -246,16 +197,6 @@ case $1 in
 
 	help | --help | -h) ### Exibe tela de ajuda
 		echo "Ainda em construcao!"
-	;;
-
-	--log-enable) ### Ativa o LOG do Firewall
-		sleep 3
-		log_enable
-	;;
-
-	--log-disable) ### Desativa o LOG do Firewall
-		sleep 2
-		log_disable
 	;;
 
 	--regras) ### Lista as regras atuais do Firewall
