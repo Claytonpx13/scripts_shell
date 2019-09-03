@@ -35,7 +35,7 @@ ERRO(){ # Esta função é chamada quando o parâmetro não é passado corretame
 
 ajuda(){ # Esta função é chamada quando o parâmetro -h ou --help é encontrado.
 	echo
-	echo -n " SINTAX: $(basename $0) [PARÂMETRO]"
+	echo -n " SINTAX: $(basename "$0") [PARÂMETRO]"
 	echo
 	echo "Requisitos: lynx instalado."
 	echo
@@ -77,7 +77,7 @@ ajuda(){ # Esta função é chamada quando o parâmetro -h ou --help é encontra
 
 versao(){ # Esta função é chamada quando o parâmetro -v ou --version é encontrado.
 	echo
-	echo -n $(basename " $0")
+	echo -n "$(basename " $0")"
 	echo
 	echo " Mostra o valor atual das moedas mais importantes."
 	echo
@@ -85,24 +85,24 @@ versao(){ # Esta função é chamada quando o parâmetro -v ou --version é enco
 	echo
 }
 
-if ! [ "$1" ];then # Verifica se não existe um parâmetro para o programa.
+if ! [[ "$1" ]];then # Verifica se não existe um parâmetro para o programa.
 	# Se não encontrar um parâmetro este bloco é execultado.
 	echo " Você não passou um parâmetro para o programa."
-	echo -e " Para mais informações digite\033[32m $(basename $0) -a\033[m ou\033[32m $(basename $0) --ajuda\033[m"
+	echo -e " Para mais informações digite\033[32m $(basename "$0") -a\033[m ou\033[32m $(basename "$0") --ajuda\033[m"
 fi
 
-if ! [ $(which lynx) ];then
+if ! [[ $(command -v lynx) ]];then
 	echo " ERRO: Requisito nao satisfeito!"
 	echo "O lynx nao foi encontrado no seu sistema!"
 	echo "Instale o lynx para que este escript funcione corretamente"
 	echo 
 	echo " Pressione <ENTER> para sair"
-	read
+	read -r
 	exit 1
 fi
 
 # Tratamento das opções de linha de comando.
-while test -n "$1"
+while [[ -n "$1" ]]
 do
  case $1 in  # Este case trata o parâmetro passado e retorna o comando equivalente ao parâmetro.
  	--ajuda | -a)
